@@ -79,7 +79,26 @@
 
         <p>Fundamentally, rootkits operate on the kernel.  Many rootkits are hidden in the .sys files which are part of the Kernel-Mode drivers.  Once the kernel is infiltrated, there are a number of weaknesses.  First, kernel memory is flat and has no security separation.  Second, kernel drivers can access any part of memory.  Lastly, the kernel memory can be manipulated to maintain stealth for the rootkit, through structures such as the SSDT, IRP, IDT, etc.  The SSDT is the system service description table. </p>
 
-        <p>The first lab went through the Agony rootkit analysis.  Unfortunately, I was one of the few students who struggled with the directions.  Instead of renaming the file bad, we were putting the file in a folder called bad.  This was because we were renaming the file during the unzipping prompt, instead of unzipping and then renaming.  This was not discovered until Tuesday on Piazza, so there was less time to work through the lab.  I have included my answer for the memory location of the function calls in the comments section of this homework assignment.  The lab used Tuluka which can look at memory addresses of various portions of the kernel and highlight which point outside the kernel boundaries.  This helps identify potential malware.  The lab also used Cuckoo wand performed some live kernel debugging.  In the live kernel debugging demo, we could use various API calls such as NtQueryDirectoryFile to show how malware can using stealth.</p>
+        <p>The first lab went through the Agony rootkit analysis.  Unfortunately, I was one of the few students who struggled with the directions.  Instead of renaming the file bad, we were putting the file in a folder called bad.  This was because we were renaming the file during the unzipping prompt, instead of unzipping and then renaming.  This was not discovered until Tuesday on Piazza, so there was less time to work through the lab.  The lab used Tuluka which can look at memory addresses of various portions of the kernel and highlight which point outside the kernel boundaries.  This helps identify potential malware.  The lab also used Cuckoo wand performed some live kernel debugging.  In the live kernel debugging demo, we could use various API calls such as NtQueryDirectoryFile to show how malware can using stealth.  I was able to find the following memory addresses using Tuluka for the API calls: 
+        	<ul>
+        		<li>NtEnumerateValueKey   Original: 82e93a0f   Current: 9bcc0480</li>
+        		<li>ntQueryDirectoryFile   Original: 82ea7250   Current: 9bcc0050</li>
+        		<li>NtQuerySystemInformation   Original: 82e48775   Current: 9bcbff00</li>
+        	</ul>
+        I set breakpoints at the current addresses listed above and found callbacks at the following memory addresses:
+        	<ul>
+	        	<li>NtEnumerateValueKey   9bcc04d4</li>
+	        	<li>ntQueryDirectoryFile   9bcc0086</li>
+	        	<li>NtQuerySystemInformation   9bcbff1a</li>
+	        </ul>
+
+	    The resulting offsets are listed below:
+			<ul>
+	        	<li>NtEnumerateValueKey   84 bytes</li>
+	        	<li>ntQueryDirectoryFile   54 bytes</li>
+	        	<li>NtQuerySystemInformation   26 bytes</li>
+	        </ul>
+    	</p>
 
         <p>Aditya also went over some basics of OS theory.  Threads are the smallest unit of operation in an OS.  High level languages are compiled into assembly code which is translated to machine code which we see as hex values in the various tools we use.  In a small example, we saw how the machine code 03 c3 means adding.  Thismachine code is loaded into RAM which is transferred to the CPU using the BUS.  The CPU fetches the additional instructions and exectures.  The thread scheduler is what handles all the threads in queue by assigning thread priorities.  Application programmers can specify the priority of threads when they are developing software.  Additionally, the thread scheduler will boost priority of threads that have been waiting for a while.</p>
 
