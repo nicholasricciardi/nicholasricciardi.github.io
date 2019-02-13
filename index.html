@@ -82,21 +82,21 @@
         <p>The first lab went through the Agony rootkit analysis.  Unfortunately, I was one of the few students who struggled with the directions.  Instead of renaming the file bad, we were putting the file in a folder called bad.  This was because we were renaming the file during the unzipping prompt, instead of unzipping and then renaming.  This was not discovered until Tuesday on Piazza, so there was less time to work through the lab.  The lab used Tuluka which can look at memory addresses of various portions of the kernel and highlight which point outside the kernel boundaries.  This helps identify potential malware.  The lab also used Cuckoo wand performed some live kernel debugging.  In the live kernel debugging demo, we could use various API calls such as NtQueryDirectoryFile to show how malware can using stealth.  I was able to find the following memory addresses using Tuluka for the API calls: 
         	<ul>
         		<li>NtEnumerateValueKey   Original: 82e93a0f   Current: 9bcc0480</li>
-        		<li>ntQueryDirectoryFile   Original: 82ea7250   Current: 9bcc0050</li>
+        		<li>NtQueryDirectoryFile   Original: 82ea7250   Current: 9bcc0050</li>
         		<li>NtQuerySystemInformation   Original: 82e48775   Current: 9bcbff00</li>
         	</ul>
         I set breakpoints at the current addresses listed above and found callbacks at the following memory addresses:
         	<ul>
 	        	<li>NtEnumerateValueKey   9bcc04d4</li>
-	        	<li>ntQueryDirectoryFile   9bcc0086</li>
+	        	<li>NtQueryDirectoryFile   9bcc0086</li>
 	        	<li>NtQuerySystemInformation   9bcbff1a</li>
 	        </ul>
 
 	    The resulting offsets are listed below:
 			<ul>
-	        	<li>NtEnumerateValueKey   84 bytes</li>
-	        	<li>ntQueryDirectoryFile   54 bytes</li>
-	        	<li>NtQuerySystemInformation   26 bytes</li>
+	        	<li>NtEnumerateValueKey   <em>84 bytes</em></li>
+	        	<li>NtQueryDirectoryFile   <em>54 bytes</em></li>
+	        	<li>NtQuerySystemInformation   <em>26 bytes</em></li>
 	        </ul>
     	</p>
 
